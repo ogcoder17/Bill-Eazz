@@ -60,6 +60,43 @@ function App() {
       [name]: name === "price" || name === "quantity" ? parseFloat(value) || 0 : value,
     });
   };
+
+  const [savedItems, setSavedItems] = useState([
+    { name: "Manchuria", price: 100, quantity: 1 },
+    { name: "Fried Rice", price: 120, quantity: 1 },
+    { name: "Noodles", price: 90, quantity: 1 },
+    { name: "Burger", price: 150, quantity: 1 },
+    { name: "Pizza", price:180, quantity:1 },
+    { name: "Pasta", price:200, quantity:1 }
+  ]);
+
+  const addSavedItem = (savedItem) => {
+    const existingItemIndex = items.findIndex((item) => item.name === savedItem.name);
+  
+    if (existingItemIndex > -1) {
+      // If the item already exists, update its quantity and total cost
+      setItems((prevItems) =>
+        prevItems.map((item, index) =>
+          index === existingItemIndex
+            ? {
+                ...item,
+                quantity: item.quantity + savedItem.quantity,
+                totalCost: (item.quantity + savedItem.quantity) * item.price,
+              }
+            : item
+        )
+      );
+    } else {
+      // Add the saved item as a new entry
+      setItems([
+        ...items,
+        {
+          ...savedItem,
+          totalCost: savedItem.price * savedItem.quantity,
+        },
+      ]);
+    }
+  };
   
 
   const addItem = () => {
@@ -85,7 +122,7 @@ function App() {
     setItems((prevItems) =>
       prevItems.map((item, i) =>
         i === index
-          ? { ...item, quantity: item.quantity > 1 ? item.quantity + 1 : 1, totalCost: item.price * (item.quantity > 1 ? item.quantity + 1 : 1) }
+          ? { ...item, quantity: item.quantity >= 1 ? item.quantity + 1 : 1, totalCost: item.price * (item.quantity >= 1 ? item.quantity + 1 : 1) }
           : item
       )
     );
@@ -101,25 +138,17 @@ function App() {
     );
   };
 
-  const increasePrice = (index) => {
+  const handlePriceEdit = (index, value) => {
+    const newPrice = parseFloat(value) || 0; // Ensure valid number
     setItems((prevItems) =>
       prevItems.map((item, i) =>
         i === index
-          ? { ...item, price: item.price >= 1 ? item.price + 1 : 1, totalCost: item.quantity * (item.price >= 1 ? item.price + 1 : 1) }
+          ? { ...item, price: newPrice, totalCost: newPrice * item.quantity }
           : item
       )
     );
   };
 
-  const decreasePrice = (index) => {
-    setItems((prevItems) =>
-      prevItems.map((item, i) =>
-        i === index
-          ? { ...item, price: item.price > 1 ? item.price - 1 : 1, totalCost: item.quantity * (item.price >= 1 ? item.price - 1 : 1) }
-          : item
-      )
-    );
-  };
 
   const calculateTotalCost = () => {
     return items.reduce((total, item) => total + item.totalCost, 0);
@@ -226,11 +255,17 @@ function App() {
         <center><h3>Items</h3></center>
         {items.map((item, index) => (
           <div key={index} className="item">
-            <span>{item.name} <br/> (Qty: {item.quantity}) (Pr: {item.price})</span>
-            <button onClick={() => increaseQuantity(index)} disabled={item.quantity <= 1}>Quantity<br/>(+)</button>
-            <button onClick={() => decreaseQuantity(index)} disabled={item.quantity <= 1}>Quantity<br />(-)</button>
-            <button onClick={() => increasePrice(index)} disabled={item.quantity <= 1}>Price<br />(+)</button>
-            <button onClick={() => decreasePrice(index)} disabled={item.quantity <= 1}>Price<br />(-)</button>
+            <span>{item.name} <br/> (Qty: {item.quantity})</span>
+            Quantity:
+            <button onClick={() => increaseQuantity(index)} disabled={item.quantity <= 0}>(+)</button>
+            <button onClick={() => decreaseQuantity(index)} disabled={item.quantity <= 1}>(-)</button>
+            <span>Price:</span>
+            <input
+              type="number"
+              value={item.price}
+              onChange={(e) => handlePriceEdit(index, e.target.value)}
+              className="price-input"
+            />
             <button className="btn btn-info" onClick={() => removeItem(index)}>Remove</button>
           </div>
         ))}
@@ -243,9 +278,21 @@ function App() {
       <Draggable>
         <div className="draggable-panel">
           <ResizableBox width={400} height={500} minConstraints={[300, 300]} maxConstraints={[700, 700]}>
-            <div className="panel">
             <center><h3>Saved Items</h3></center>
-            </div>
+            <div className="panel">
+            <div className="saved-items-row">
+              {savedItems.map((savedItem, index) => (
+            <button
+               key={index}
+               onClick={() => addSavedItem(savedItem)}
+               className="saved-item-btn"
+            >
+              {savedItem.name}
+            </button>
+            ))}
+              </div>
+          </div>
+
           </ResizableBox>
         </div>
       </Draggable>
