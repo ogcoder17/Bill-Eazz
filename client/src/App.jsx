@@ -5,46 +5,138 @@ import "react-resizable/css/styles.css";
 import "./App.css";
 import styled from 'styled-components';
 
-
 function BillTable({ name, items, totalCost }) {
+  const companyName = sessionStorage.getItem("companyName");
+  const logo = sessionStorage.getItem("logo");
+  const phoneNumber = sessionStorage.getItem("phoneNumber");
+  const address = sessionStorage.getItem("address");
+
+  const styles = {
+    container: {
+      padding: "20px",
+      textAlign: "center",
+      fontFamily: "'Courier New', Courier, monospace",
+      backgroundColor: "#fff",
+      borderRadius: "10px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      width: "400px",
+      margin: "20px auto",
+      border: "1px solid #ddd",
+    },
+    header: {
+      marginBottom: "20px",
+    },
+    logo: {
+      maxWidth: "80px",
+      marginBottom: "10px",
+    },
+    companyName: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      color: "#333",
+    },
+    contact: {
+      fontSize: "0.9rem",
+      color: "#555",
+    },
+    table: {
+      margin: "0 auto",
+      width: "100%",
+      borderCollapse: "collapse",
+    },
+    th: {
+      padding: "8px",
+      textAlign: "left",
+      borderBottom: "1px solid #ddd",
+      fontSize: "0.9rem",
+    },
+    td: {
+      padding: "8px",
+      textAlign: "left",
+      fontSize: "0.9rem",
+    },
+    rowEven: {
+      backgroundColor: "#f9f9f9",
+    },
+    strongText: {
+      fontWeight: "bold",
+      color: "#333",
+    },
+    lastCol: {
+      textAlign: "right",
+    },
+    totalRow: {
+      fontSize: "1rem",
+      fontWeight: "bold",
+      borderTop: "2px dashed #333",
+    },
+  };
+
   return (
-    
-    <div className="bill-table">
-      <table border="1" cellPadding="10">
+    <div style={styles.container}>
+      {/* Logo and Company Details */}
+      <div style={styles.header}>
+        {logo && <img src={logo} alt="Company Logo" style={styles.logo} />}
+        <h1 style={styles.companyName}>{companyName}</h1>
+        <p style={styles.contact}>{phoneNumber}</p>
+        <p style={styles.contact}>{address}</p>
+      </div>
+
+      {/* Bill Table */}
+      <table style={styles.table}>
         <thead>
           <tr>
-            <th colSpan="4">Bill Details</th>
+            <th colSpan="4" style={styles.th}>
+              Bill Details
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td colSpan="2"><strong>Customer Number:</strong></td>
-            <td colSpan="2">{name}</td>
+            <td colSpan="2" style={styles.td}>
+              <strong style={styles.strongText}>Customer Name:</strong>
+            </td>
+            <td colSpan="2" style={styles.td}>
+              {name}
+            </td>
           </tr>
           <tr>
-            <td><strong>Item</strong></td>
-            <td><strong>Quantity</strong></td>
-            <td><strong>Price</strong></td>
-            <td><strong>Total</strong></td>
+            <td style={styles.th}>
+              <strong style={styles.strongText}>Item</strong>
+            </td>
+            <td style={styles.th}>
+              <strong style={styles.strongText}>Quantity</strong>
+            </td>
+            <td style={styles.th}>
+              <strong style={styles.strongText}>Price</strong>
+            </td>
+            <td style={styles.th}>
+              <strong style={styles.strongText}>Total</strong>
+            </td>
           </tr>
           {items.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-              <td>₹{item.price.toFixed(2)}</td>
-              <td>₹{item.totalCost.toFixed(2)}</td>
+            <tr key={index} style={index % 2 === 0 ? styles.rowEven : {}}>
+              <td style={styles.td}>{item.name}</td>
+              <td style={styles.td}>{item.quantity}</td>
+              <td style={styles.td}>₹{item.price.toFixed(2)}</td>
+              <td style={styles.td}>₹{item.totalCost.toFixed(2)}</td>
             </tr>
           ))}
-          <tr>
-            <td colSpan="3"><strong>Total Cost:</strong></td>
-            <td><strong>₹{totalCost.toFixed(2)}</strong></td>
+          <tr style={styles.totalRow}>
+            <td colSpan="3" style={styles.td}>
+              <strong style={styles.strongText}>Total Cost:</strong>
+            </td>
+            <td style={{ ...styles.td, ...styles.lastCol }}>
+              <strong>₹{totalCost.toFixed(2)}</strong>
+            </td>
           </tr>
         </tbody>
       </table>
-      
     </div>
   );
 }
+
+
 
 function App() {
   const [name, setName] = useState("");
@@ -157,11 +249,57 @@ function App() {
   const handlePrint = () => {
     const printableContent = printableRef.current.innerHTML;
     const newWindow = window.open("", "_blank");
+  
+    // Create a <style> element and inject styles
+    const styleTag = document.createElement("style");
+    styleTag.innerHTML = `
+      @import url('https://fonts.googleapis.com/css2?family=Arial:wght@400;700&display=swap'); /* If you are using external font */
+      body {
+        font-family: 'Arial', sans-serif;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+      .panel {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #007bff;
+        color: white;
+      }
+      td {
+        font-size: 1rem;
+      }
+      .totalRow {
+        font-weight: bold;
+        background-color: #f8f9fa;
+      }
+      .totalCost {
+        border-top: 2px solid #007bff;
+      }
+    `;
+    newWindow.document.head.appendChild(styleTag);
+    
+    // Inject the HTML content
     newWindow.document.write(printableContent);
     newWindow.document.close();
+  
+    // Trigger the print dialog
     newWindow.print();
     newWindow.close();
   };
+  
 
 
   return (
