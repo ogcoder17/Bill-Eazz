@@ -19,7 +19,6 @@
 }
 
 .draggable-panel {
-
   border: 2px solid #dddddd; /* Light border color */
   border-radius: 8px;
   background-color: #ffffff; /* Light background */
@@ -135,9 +134,9 @@
 .saved-items-row {
   display: flex;
   justify-content: center; /* Center the buttons horizontally */
-  align-items: center;    /* Center the buttons vertically */
-  gap: 10px;              /* Space between buttons */
-  flex-wrap: wrap;        /* Wrap to the next row if there's not enough space */
+  align-items: center; /* Center the buttons vertically */
+  gap: 10px; /* Space between buttons */
+  flex-wrap: wrap; /* Wrap to the next row if there's not enough space */
 }
 
 .saved-item-btn {
