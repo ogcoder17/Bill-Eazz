@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 function SetDetails() {
   const [companyName, setCompanyName] = useState("");
   const [logo, setLogo] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
   const handleLogoUpload = (e) => {
@@ -18,13 +20,15 @@ function SetDetails() {
   };
 
   const handleProceed = () => {
-    if (companyName) {
+    if (companyName && phoneNumber && address) {
       // Save company details to session storage
       sessionStorage.setItem("companyName", companyName);
       sessionStorage.setItem("logo", logo);
+      sessionStorage.setItem("phoneNumber", phoneNumber);
+      sessionStorage.setItem("address", address);
       navigate("/"); // Redirect to the main page
     } else {
-      alert("Please enter a company name.");
+      alert("Please fill in all fields.");
     }
   };
 
@@ -40,7 +44,22 @@ function SetDetails() {
         placeholder="Enter Company Name"
         value={companyName}
         onChange={(e) => setCompanyName(e.target.value)}
-        style={{ marginBottom: "20px", padding: "10px", width: "300px" }}
+        style={{ marginBottom: "10px", padding: "10px", width: "300px" }}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="Enter Phone Number"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        style={{ marginBottom: "10px", padding: "10px", width: "300px" }}
+      />
+      <br />
+      <textarea
+        placeholder="Enter Address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        style={{ marginBottom: "20px", padding: "10px", width: "300px", height: "100px" }}
       />
       <br />
       <button onClick={handleProceed} style={{ padding: "10px 20px", fontSize: "16px" }}>

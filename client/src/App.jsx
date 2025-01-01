@@ -8,53 +8,55 @@ import styled from 'styled-components';
 function BillTable({ name, items, totalCost }) {
   const companyName = sessionStorage.getItem("companyName");
   const logo = sessionStorage.getItem("logo");
+  const phoneNumber = sessionStorage.getItem("phoneNumber");
+  const address = sessionStorage.getItem("address");
 
   const styles = {
     container: {
       padding: "20px",
       textAlign: "center",
-      fontFamily: "'Arial', sans-serif",
-      backgroundColor: "#f8f9fa",
+      fontFamily: "'Courier New', Courier, monospace",
+      backgroundColor: "#fff",
       borderRadius: "10px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      width: "400px",
+      margin: "20px auto",
+      border: "1px solid #ddd",
     },
     header: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
       marginBottom: "20px",
     },
     logo: {
-      maxWidth: "100px",
+      maxWidth: "80px",
       marginBottom: "10px",
     },
     companyName: {
-      fontSize: "2rem",
+      fontSize: "1.5rem",
       fontWeight: "bold",
       color: "#333",
-      textAlign: "right",
+    },
+    contact: {
+      fontSize: "0.9rem",
+      color: "#555",
     },
     table: {
       margin: "0 auto",
-      width: "80%",
+      width: "100%",
       borderCollapse: "collapse",
     },
     th: {
-      padding: "10px",
+      padding: "8px",
       textAlign: "left",
-      border: "1px solid #ddd",
-      backgroundColor: "#007bff",
-      color: "white",
-      fontSize: "1.1rem",
+      borderBottom: "1px solid #ddd",
+      fontSize: "0.9rem",
     },
     td: {
-      padding: "10px",
+      padding: "8px",
       textAlign: "left",
-      border: "1px solid #ddd",
-      fontSize: "1rem",
+      fontSize: "0.9rem",
     },
     rowEven: {
-      backgroundColor: "#f2f2f2",
+      backgroundColor: "#f9f9f9",
     },
     strongText: {
       fontWeight: "bold",
@@ -64,21 +66,20 @@ function BillTable({ name, items, totalCost }) {
       textAlign: "right",
     },
     totalRow: {
-      fontSize: "1.2rem",
+      fontSize: "1rem",
       fontWeight: "bold",
-      backgroundColor: "#f8f9fa",
-    },
-    totalCost: {
-      borderTop: "2px solid #007bff",
+      borderTop: "2px dashed #333",
     },
   };
 
   return (
     <div style={styles.container}>
-      {/* Logo and Company Name */}
+      {/* Logo and Company Details */}
       <div style={styles.header}>
         {logo && <img src={logo} alt="Company Logo" style={styles.logo} />}
         <h1 style={styles.companyName}>{companyName}</h1>
+        <p style={styles.contact}>{phoneNumber}</p>
+        <p style={styles.contact}>{address}</p>
       </div>
 
       {/* Bill Table */}
